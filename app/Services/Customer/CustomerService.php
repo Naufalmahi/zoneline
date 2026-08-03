@@ -22,6 +22,7 @@ class CustomerService extends BaseService
     public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = Customer::query()
+            ->withCount('orders')
             ->when($filters['search'] ?? null, function ($q, $search) {
                 $q->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")

@@ -33,16 +33,14 @@ class Customer extends Model
 
 // ─── Supporting models (small, grouped for brevity) ─────────────────────────
 
-namespace App\Models;
-
-class CustomerAddress extends Model
+class CustomerAddress extends \Illuminate\Database\Eloquent\Model
 {
     use HasTenant;
     protected $guarded = [];
     public function customer() { return $this->belongsTo(Customer::class); }
 }
 
-class CustomerNote extends Model
+class CustomerNote extends \Illuminate\Database\Eloquent\Model
 {
     use HasTenant;
     protected $guarded = [];

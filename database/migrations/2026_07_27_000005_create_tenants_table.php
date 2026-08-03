@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('slug', 150)->unique();       // laundry-bersih → URL-friendly
             $table->string('email', 150)->nullable();
             $table->string('phone', 20)->nullable();
+            $table->enum('niche', ['laundry', 'coffee', 'barbershop'])->default('laundry');
             $table->string('status', 20)->default('Trial'); // Trial, Active, Suspended, Expired
             $table->timestamps();
             $table->softDeletes();

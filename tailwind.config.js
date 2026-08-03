@@ -1,3 +1,5 @@
+import forms from '@tailwindcss/forms';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -12,7 +14,7 @@ export default {
           heading: ['Poppins', 'sans-serif'],
       },
       colors: {
-          primary: '#2563EB',
+          primary: 'var(--color-primary, #2563EB)',
           success: '#22C55E',
           warning: '#F59E0B',
           danger: '#EF4444',
@@ -23,6 +25,6 @@ export default {
     }
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    forms,
   ],
 }

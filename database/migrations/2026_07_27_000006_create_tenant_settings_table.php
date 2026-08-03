@@ -14,6 +14,8 @@ return new class extends Migration
             $table->foreignId('tenant_id')->constrained('tenants')->cascadeOnDelete();
             $table->string('business_name', 150)->nullable();
             $table->string('logo', 255)->nullable();
+            $table->string('primary_color', 20)->default('#2563EB'); // Default Zoneline blue
+            $table->string('font_family', 50)->default('Inter');
             $table->text('address')->nullable();
             $table->string('city', 100)->nullable();
             $table->string('province', 100)->nullable();

@@ -12,7 +12,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="mb-1 text-sm font-medium text-gray-500">Order Hari Ini</p>
-                    <h3 class="text-2xl font-bold text-gray-800">24</h3>
+                    <h3 class="text-2xl font-bold text-gray-800">{{ number_format($todayOrdersCount ?? 0) }}</h3>
                 </div>
             </div>
         </x-card>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="mb-1 text-sm font-medium text-gray-500">Pendapatan Hari Ini</p>
-                    <h3 class="text-2xl font-bold text-gray-800">Rp 450.000</h3>
+                    <h3 class="text-2xl font-bold text-gray-800">Rp {{ number_format($todayRevenue ?? 0, 0, ',', '.') }}</h3>
                 </div>
             </div>
         </x-card>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="mb-1 text-sm font-medium text-gray-500">Belum Bayar (Piutang)</p>
-                    <h3 class="text-2xl font-bold text-gray-800">Rp 120.000</h3>
+                    <h3 class="text-2xl font-bold text-gray-800">Rp {{ number_format($outstandingDebt ?? 0, 0, ',', '.') }}</h3>
                 </div>
             </div>
         </x-card>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="ml-4">
                     <p class="mb-1 text-sm font-medium text-gray-500">Selesai Belum Diambil</p>
-                    <h3 class="text-2xl font-bold text-gray-800">8</h3>
+                    <h3 class="text-2xl font-bold text-gray-800">{{ number_format($readyOrdersCount ?? 0) }}</h3>
                 </div>
             </div>
         </x-card>
@@ -63,7 +63,7 @@
                 <x-slot name="header">
                     <div class="flex justify-between items-center">
                         <h3 class="font-heading font-semibold text-lg">Order Terbaru</h3>
-                        <a href="#" class="text-sm font-medium text-primary hover:underline">Lihat Semua</a>
+                        <a href="{{ route('owner.orders.index') }}" class="text-sm font-medium text-primary hover:underline">Lihat Semua</a>
                     </div>
                 </x-slot>
                 
@@ -76,27 +76,27 @@
                             <th scope="col" class="px-6 py-3">Total</th>
                         </x-slot>
                         
-                        <!-- Dummy Row 1 -->
+                        @forelse($recentOrders ?? [] as $order)
                         <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">INV-26-001</td>
-                            <td class="px-6 py-4">Budi Santoso</td>
-                            <td class="px-6 py-4"><x-badge color="primary">Washing</x-badge></td>
-                            <td class="px-6 py-4">Rp 45.000</td>
+                            <td class="px-6 py-4 font-medium text-gray-900"><a href="{{ route('owner.orders.show', $order->id) }}" class="text-primary hover:underline">{{ $order->invoice_number }}</a></td>
+                            <td class="px-6 py-4">{{ $order->customer->name ?? '-' }}</td>
+                            <td class="px-6 py-4">
+                                @if($order->status)
+                                    <span class="inline-block px-2 py-1 text-xs rounded-full font-semibold"
+                                          style="background-color: {{ $order->status->color_hex }}22; color: {{ $order->status->color_hex }}">
+                                        {{ $order->status->name }}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
                         </tr>
-                        <!-- Dummy Row 2 -->
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">INV-26-002</td>
-                            <td class="px-6 py-4">Siti Aisyah</td>
-                            <td class="px-6 py-4"><x-badge color="success">Ready</x-badge></td>
-                            <td class="px-6 py-4">Rp 120.000</td>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Belum ada order.</td>
                         </tr>
-                        <!-- Dummy Row 3 -->
-                        <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">INV-26-003</td>
-                            <td class="px-6 py-4">Andi Wijaya</td>
-                            <td class="px-6 py-4"><x-badge color="warning">Received</x-badge></td>
-                            <td class="px-6 py-4">Rp 30.000</td>
-                        </tr>
+                        @endforelse
                     </x-table>
                 </div>
             </x-card>
@@ -111,47 +111,36 @@
 
                 <div class="flow-root">
                     <ul role="list" class="-mb-8">
+                        @forelse($recentActivities ?? [] as $log)
                         <li>
                             <div class="relative pb-8">
-                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                @if(!$loop->last)
+                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                @endif
                                 <div class="relative flex space-x-3">
                                     <div>
                                         <span class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center ring-8 ring-white">
-                                            <svg class="h-4 w-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                            <svg class="h-4 w-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         </span>
                                     </div>
                                     <div class="min-w-0 flex-1 pt-1 flex justify-between space-x-4">
                                         <div>
-                                            <p class="text-sm text-gray-500">Order <span class="font-medium text-gray-900">INV-26-004</span> ditambahkan oleh Kasir</p>
+                                            <p class="text-sm text-gray-500">
+                                                Status order <a href="{{ route('owner.orders.show', $log->order_id) }}" class="font-medium text-gray-900 hover:underline">{{ $log->order->invoice_number }}</a> diubah menjadi <strong>{{ $log->status_name }}</strong> oleh {{ $log->changedBy->name ?? 'Sistem' }}
+                                            </p>
                                         </div>
                                         <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time datetime="2020-09-20">5 mnt lalu</time>
+                                            <time datetime="{{ $log->created_at }}">{{ $log->created_at->diffForHumans() }}</time>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        
+                        @empty
                         <li>
-                            <div class="relative pb-8">
-                                <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
-                                <div class="relative flex space-x-3">
-                                    <div>
-                                        <span class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center ring-8 ring-white">
-                                            <svg class="h-4 w-4 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        </span>
-                                    </div>
-                                    <div class="min-w-0 flex-1 pt-1 flex justify-between space-x-4">
-                                        <div>
-                                            <p class="text-sm text-gray-500">Pembayaran <span class="font-medium text-gray-900">INV-26-002</span> Rp 120.000 via QRIS</p>
-                                        </div>
-                                        <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time datetime="2020-09-20">15 mnt lalu</time>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <p class="text-sm text-gray-500 text-center py-4">Belum ada aktivitas.</p>
                         </li>
+                        @endforelse
                     </ul>
                 </div>
             </x-card>

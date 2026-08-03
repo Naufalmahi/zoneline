@@ -1,5 +1,11 @@
 <x-guest-layout>
-    <div class="min-h-[calc(100vh-140px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-lg mb-4">
+            <a href="/" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary transition">
+                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Beranda
+            </a>
+        </div>
         <x-card class="max-w-lg w-full p-8 shadow-xl border-t-4 border-t-primary">
             <div>
                 <h2 class="text-center text-3xl font-heading font-extrabold text-gray-900">
@@ -28,8 +34,37 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <x-label for="laundry_name">Nama Laundry</x-label>
-                        <x-input id="laundry_name" name="laundry_name" type="text" required placeholder="Cemerlang Laundry" value="{{ old('laundry_name') }}" />
+                        <x-label class="mb-2">Jenis Bisnis</x-label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="niche" value="laundry" class="peer sr-only" checked>
+                                <div class="rounded-lg border border-gray-200 bg-white p-3 hover:bg-gray-50 peer-checked:border-primary peer-checked:bg-blue-50 transition text-center">
+                                    <div class="text-2xl mb-1">🧺</div>
+                                    <div class="font-medium text-sm text-gray-900">Laundry</div>
+                                </div>
+                            </label>
+                            
+                            <label class="cursor-pointer">
+                                <input type="radio" name="niche" value="coffee" class="peer sr-only">
+                                <div class="rounded-lg border border-gray-200 bg-white p-3 hover:bg-gray-50 peer-checked:border-primary peer-checked:bg-blue-50 transition text-center">
+                                    <div class="text-2xl mb-1">☕</div>
+                                    <div class="font-medium text-sm text-gray-900">Coffee Shop</div>
+                                </div>
+                            </label>
+                            
+                            <label class="cursor-pointer">
+                                <input type="radio" name="niche" value="barbershop" class="peer sr-only">
+                                <div class="rounded-lg border border-gray-200 bg-white p-3 hover:bg-gray-50 peer-checked:border-primary peer-checked:bg-blue-50 transition text-center">
+                                    <div class="text-2xl mb-1">💈</div>
+                                    <div class="font-medium text-sm text-gray-900">Barbershop</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <x-label for="laundry_name">Nama Bisnis</x-label>
+                        <x-input id="laundry_name" name="laundry_name" type="text" required placeholder="Nama Usaha Anda" value="{{ old('laundry_name') }}" />
                     </div>
                     
                     <div>

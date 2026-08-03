@@ -14,13 +14,41 @@ class OrderController extends Controller
         private readonly OrderService $orderService
     ) {}
 
+    public function index()
+    {
+        $orders = \App\Models\Order::with(['customer', 'status'])
+            ->where('tenant_id', auth()->user()->tenant_id)
+            ->latest()
+            ->paginate(20);
+        return view('owner.orders.index', compact('orders'));
+    }
+
+    public function show(\App\Models\Order $order)
+    {
+        abort_unless($order->tenant_id === auth()->user()->tenant_id, 403);
+        $order->load(['customer', 'status', 'details', 'statusLogs']);
+        $statuses = \App\Models\OrderStatus::where('tenant_id', auth()->user()->tenant_id)->orderBy('sequence')->get();
+        return view('owner.orders.show', compact('order', 'statuses'));
+    }
+
+    public function updateStatus(\Illuminate\Http\Request $request, \App\Models\Order $order)
+    {
+        abort_unless($order->tenant_id === auth()->user()->tenant_id, 403);
+        $request->validate(['status_id' => 'required|exists:order_statuses,id']);
+        $this->orderService->updateStatus($order, $request->status_id, $request->notes);
+        return back()->with('success', 'Status order berhasil diperbarui.');
+    }
+
     public function create()
     {
-        // Get active customers for the dropdown
-        $customers = Customer::orderBy('name')->get();
+        // Get active customers for the dropdown — scoped to this tenant
+        $customers = Customer::where('tenant_id', auth()->user()->tenant_id)->orderBy('name')->get();
         
         // Get active services with their current price
-        $services = Service::with('currentPrice')->where('is_active', true)->get();
+        $services = Service::with('currentPrice')
+            ->where('tenant_id', auth()->user()->tenant_id)
+            ->where('is_active', true)
+            ->get();
         
         return view('owner.orders.create', compact('customers', 'services'));
     }

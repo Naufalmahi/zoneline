@@ -1,6 +1,11 @@
 <x-guest-layout>
     <div class="min-h-[calc(100vh-140px)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        
+        <div class="w-full max-w-xl mb-4">
+            <a href="/" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary transition">
+                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Beranda
+            </a>
+        </div>
         <div class="text-center mb-8">
             <h1 class="text-3xl font-heading font-extrabold text-gray-900">Cek Status Cucian</h1>
             <p class="mt-2 text-gray-500">Masukkan nomor invoice Anda untuk melacak status pakaian</p>

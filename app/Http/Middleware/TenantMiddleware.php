@@ -47,7 +47,12 @@ class TenantMiddleware
 
         // Share tenant ke seluruh view (dipakai navbar, sidebar, dsb)
         view()->share('currentTenant', $tenant);
-        view()->share('currentTenantSettings', $tenant->settings);
+        // Auto-create settings if missing to avoid null errors in views
+        $settings = $tenant->settings()->firstOrCreate(
+            ['tenant_id' => $tenant->id],
+            ['business_name' => $tenant->name, 'primary_color' => '#2563EB', 'font_family' => 'Inter']
+        );
+        view()->share('currentTenantSettings', $settings);
 
         return $next($request);
     }
